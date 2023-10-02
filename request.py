@@ -4,6 +4,8 @@ from ip2geotools.databases.noncommercial import DbIpCity
 from timezonefinder import TimezoneFinder
 import logging
 import time
+from webb import webb
+
 
 tf = TimezoneFinder() 
 logging.basicConfig(filename="newfile.log",
@@ -23,6 +25,8 @@ def request(p):
 
     url = 'https://geonode.com/free-proxy-list'
     response = session.get(url)       # To execute get request 
+    logging.debug(f"proxy:location:timezone:response code is  {proxy1}:{geo1}:{timez1}:{code} ")
+    logging.debug(f"The RTT is {response.elapsed.total_seconds()} ")
     return response.status_code     # To print http response code   
 
 def get_location(proxy):
@@ -31,8 +35,7 @@ def get_location(proxy):
     timezome = tf.timezone_at(lat=geo.latitude,lng=geo.longitude)
     return geo.city, timezome
 
-if __name__ == "__main__":
-    #fp = FreeProxy(rand=True,country_id=['US'])
+def main():
     fp = FreeProxy(country_id=['US'])
     proxy1 = fp.get()
     #proxy2 = fp.get()
@@ -40,8 +43,10 @@ if __name__ == "__main__":
     #print(f"length of list is {len(fp_list)}")
     geo1, timez1 = get_location(proxy1)
     print(proxy1)
-    while True:
+    while False:
         code = request(proxy1)
-        logging.debug(f"proxy is {proxy1} location is {geo1} timezone is {timez1} response code is {code} ")
-        time.sleep(2)
+        time.sleep(2)   
+
+if __name__ == "__main__":
+    main()
 
