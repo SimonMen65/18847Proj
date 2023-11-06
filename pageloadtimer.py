@@ -9,9 +9,14 @@ import textwrap
 import csv
 import time
 import webb
-
+import os
+import argparse
 from selenium import webdriver
+from datetime import datetime
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--Fname", type=str, required=True,help="File Name")
+FNAME = parser.parse_args().Fname
 
 class PageLoadTimer:
 
@@ -60,17 +65,19 @@ class PageLoadTimer:
 
 def main():
     rows = []
-    fields = ['connectStart', 'secureConnectionStart', 'requestStart','responseStart','networkTime', 'serverTime']
+    fields = ['dateTime','connectStart', 'secureConnectionStart', 'requestStart','responseStart','networkTime', 'serverTime']
     #with Xvfb() as xvfb:
    
     url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
     counter = 0
-    while counter < 10:
-        driver = webdriver.Firefox()
+    while counter < 30:
+        options = webdriver.FirefoxOptions()
+        options.add_argument("-headless")
+        driver = webdriver.Firefox(options=options)
         driver.get(url)
         timer = PageLoadTimer(driver)
         theTime = timer.get_event_times()
-        rows.append([theTime['connectStart'], theTime['secureConnectionStart'],\
+        rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
                         theTime['requestStart'], theTime['responseStart'], \
                     theTime['secureConnectionStart'] - theTime['connectStart'], \
                     theTime['responseStart'] - theTime['requestStart']])
@@ -80,7 +87,7 @@ def main():
         time.sleep(10)
 
     # name of csv file  
-    filename = "records.csv"
+    filename = FNAME
         
     # writing to csv file  
     with open(filename, 'a') as csvfile:  
@@ -101,3 +108,6 @@ if __name__ == '__main__':
     # url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
     # webb.traceroute(url)
     main()
+    # ipaddr = "154.6.85.146"
+    # response = os.system("ping " + ipaddr)
+    # print(response)

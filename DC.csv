@@ -1,0 +1,48 @@
+PING 181.214.94.164 (181.214.94.164): 56 data bytes
+64 bytes from 181.214.94.164: icmp_seq=0 ttl=52 time=20.104 ms
+64 bytes from 181.214.94.164: icmp_seq=1 ttl=52 time=24.824 ms
+64 bytes from 181.214.94.164: icmp_seq=2 ttl=52 time=25.324 ms
+64 bytes from 181.214.94.164: icmp_seq=3 ttl=52 time=20.584 ms
+64 bytes from 181.214.94.164: icmp_seq=4 ttl=52 time=20.513 ms
+64 bytes from 181.214.94.164: icmp_seq=5 ttl=52 time=21.079 ms
+64 bytes from 181.214.94.164: icmp_seq=6 ttl=52 time=19.425 ms
+64 bytes from 181.214.94.164: icmp_seq=7 ttl=52 time=23.944 ms
+64 bytes from 181.214.94.164: icmp_seq=8 ttl=52 time=20.694 ms
+64 bytes from 181.214.94.164: icmp_seq=0 ttl=61 time=26.065 ms
+64 bytes from 181.214.94.164: icmp_seq=1 ttl=61 time=31.916 ms
+64 bytes from 181.214.94.164: icmp_seq=2 ttl=61 time=20.557 ms
+64 bytes from 181.214.94.164: icmp_seq=3 ttl=61 time=27.370 ms
+64 bytes from 181.214.94.164: icmp_seq=4 ttl=61 time=26.794 ms
+64 bytes from 181.214.94.164: icmp_seq=5 ttl=61 time=27.506 ms
+
+connectStart,secureConnectionStart,requestStart,responseStart,networkTime,serverTime
+61,109,158,214,48,56
+4,44,91,149,40,58
+3,47,91,148,44,57
+3,48,94,151,45,57
+4,49,98,156,45,58
+3,44,90,150,41,60
+3,45,90,147,42,57
+3,44,89,144,41,55
+2,46,91,154,44,63
+3,45,93,149,42,56
+4,48,95,153,44,58
+3,43,88,145,40,57
+2,45,90,147,43,57
+3,47,97,155,44,58
+3,44,89,149,41,60
+2,49,99,161,47,62
+3,44,91,148,41,57
+4,45,92,150,41,58
+3,45,91,148,42,57
+3,46,93,151,43,58
+3,45,91,149,42,58
+3,44,91,148,41,57
+3,44,90,146,41,56
+3,44,90,147,41,57
+4,50,97,154,46,57
+2,44,91,150,42,59
+4,147,464,646,143,182
+2,45,94,152,43,58
+2,44,88,144,42,56
+2,45,91,149,43,58
