@@ -2,6 +2,9 @@
 #
 # Copyright (c) 2015 Corey Goldberg
 # License: MIT
+# this program will run test to 3 different sites and record the time it takes to load the page
+# the time is recorded in a csv file
+# the search keywords are predefined
 
 
 import collections
@@ -13,6 +16,9 @@ import os
 import argparse
 from selenium import webdriver
 from datetime import datetime
+
+import string
+import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--Fname", type=str, required=True,help="File Name")
@@ -65,25 +71,57 @@ class PageLoadTimer:
 
 def main():
     rows = []
-    fields = ['dateTime','connectStart', 'secureConnectionStart', 'requestStart','responseStart','networkTime', 'serverTime']
+    fields = ['dateTime','connectStart', 'secureConnectionStart', 'requestStart','responseStart','networkTime', 'serverTime', 'service site','searching string']
     #with Xvfb() as xvfb:
-   
-    url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
-    counter = 0
-    while counter < 30:
+    # these are the keywords we are going to search
+    search_strings = ["Carnegie Mellon University", "Airbnb", "Facebook","Youtube","cirtic","when would there be","search the map for new","suggestions on finals","start", "ending", "safety","data", "DDIO", "MSFG", "HOA", "FAFR", "WieSOichDichEmpfangen", "sagmichbitte", "ilAuraitSuffi"]
+    # url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
+    # rand_search_seed = ''.join(random.choices(string.ascii_uppercase, k=5))
+    # url2 = "https://stackoverflow.com/search?q=" + rand_search_seed
+    # url_google = "https://www.google.com/search?q=" + rand_search_seed
+    # counter = 0
+    while counter < 3:
+        time1 = time.time()
         options = webdriver.FirefoxOptions()
         options.add_argument("-headless")
-        driver = webdriver.Firefox(options=options)
-        driver.get(url)
-        timer = PageLoadTimer(driver)
-        theTime = timer.get_event_times()
-        rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
-                        theTime['requestStart'], theTime['responseStart'], \
-                    theTime['secureConnectionStart'] - theTime['connectStart'], \
-                    theTime['responseStart'] - theTime['requestStart']])
-        driver.quit()
+        
+        for search_string in search_strings:
+            driver = webdriver.Firefox(options=options)
+
+            url_google = "https://www.bing.com/search?q=" + search_string
+            driver.get(url_google)
+            timer = PageLoadTimer(driver)
+            theTime = timer.get_event_times()
+            if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
+                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
+                            theTime['requestStart'], theTime['responseStart'], \
+                        theTime['secureConnectionStart'] - theTime['connectStart'], \
+                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Bing", search_string])
+
+            url_amazon = "https://www.amazon.com/s?k=" + search_string
+            driver.get(url_amazon)
+            timer = PageLoadTimer(driver)
+            theTime = timer.get_event_times()
+            if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
+                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
+                            theTime['requestStart'], theTime['responseStart'], \
+                        theTime['secureConnectionStart'] - theTime['connectStart'], \
+                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Amazon", search_string])
+
+            url_X = "https://www.youtube.com/results?search_query=" + search_string
+            driver.get(url_X)
+            timer = PageLoadTimer(driver)
+            theTime = timer.get_event_times()
+            if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
+                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
+                            theTime['requestStart'], theTime['responseStart'], \
+                        theTime['secureConnectionStart'] - theTime['connectStart'], \
+                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Youtube", search_string])
+            driver.quit()
+        time2 = time.time()
+
         counter += 1
-        print(f"Round {counter} finished")
+        print(f"Round {counter} finished with {time2 - time1} seconds")
         time.sleep(10)
 
     # name of csv file  
@@ -105,9 +143,4 @@ def traceroute(url):
     print(result)
 
 if __name__ == '__main__':
-    # url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
-    # webb.traceroute(url)
     main()
-    # ipaddr = "154.6.85.146"
-    # response = os.system("ping " + ipaddr)
-    # print(response)

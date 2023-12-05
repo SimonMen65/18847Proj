@@ -1,0 +1,4 @@
+dateTime,connectStart,secureConnectionStart,requestStart,responseStart,networkTime,serverTime
+2023-11-08 23:20:32,1430,1430,1433,1634,0,201
+2023-11-08 23:20:49,980,980,982,1141,0,159
+2023-11-08 23:21:06,902,902,904,1031,0,127
