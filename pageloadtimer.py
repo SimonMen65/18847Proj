@@ -71,15 +71,14 @@ class PageLoadTimer:
 
 def main():
     rows = []
-    fields = ['dateTime','connectStart', 'secureConnectionStart', 'requestStart','responseStart','networkTime', 'serverTime', 'service site','searching string']
-    #with Xvfb() as xvfb:
+    fields = ['dateTime', 'service site','searching string',\
+              "navigationStart","fetchStart","domainLookupStart","domainLookupEnd",'connectStart','secureConnectionStart', \
+              'connectEnd', 'requestStart','responseStart','responseEnd','domLoading']
     # these are the keywords we are going to search
-    search_strings = ["Carnegie Mellon University", "Airbnb", "Facebook","Youtube","cirtic","when would there be","search the map for new","suggestions on finals","start", "ending", "safety","data", "DDIO", "MSFG", "HOA", "FAFR", "WieSOichDichEmpfangen", "sagmichbitte", "ilAuraitSuffi"]
-    # url = "https://en.wikipedia.org/wiki/Carnegie_Mellon_University#/media/File:Carnegie_Mellon_University_seal.svg"
-    # rand_search_seed = ''.join(random.choices(string.ascii_uppercase, k=5))
-    # url2 = "https://stackoverflow.com/search?q=" + rand_search_seed
-    # url_google = "https://www.google.com/search?q=" + rand_search_seed
-    # counter = 0
+    search_strings = ["Carnegie Mellon University", "Airbnb", "Facebook","Youtube","cirtic",\
+                      "when would there be","search the map for new","suggestions on finals","start", \
+                        "ending", "safety","data", "DDIO", "MSFG", "HOA", "FAFR", "WieSOichDichEmpfangen", "sagmichbitte", "ilAuraitSuffi"]
+    counter = 0
     while counter < 3:
         time1 = time.time()
         options = webdriver.FirefoxOptions()
@@ -92,37 +91,44 @@ def main():
             driver.get(url_google)
             timer = PageLoadTimer(driver)
             theTime = timer.get_event_times()
-            if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
-                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
-                            theTime['requestStart'], theTime['responseStart'], \
-                        theTime['secureConnectionStart'] - theTime['connectStart'], \
-                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Bing", search_string])
+            # print(theTime)
+            # print("\n")
+            # if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
+            rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),"Bing", search_string, 
+                            theTime['navigationStart'], theTime['fetchStart'],\
+                            theTime['domainLookupStart'], theTime['domainLookupEnd'], \
+                            theTime['connectStart'], theTime['secureConnectionStart'], \
+                            theTime['connectEnd'], theTime['requestStart'], \
+                            theTime['responseStart'], theTime['responseEnd'] , theTime['domLoading'] ])
 
             url_amazon = "https://www.amazon.com/s?k=" + search_string
             driver.get(url_amazon)
             timer = PageLoadTimer(driver)
             theTime = timer.get_event_times()
             if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
-                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
-                            theTime['requestStart'], theTime['responseStart'], \
-                        theTime['secureConnectionStart'] - theTime['connectStart'], \
-                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Amazon", search_string])
+                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),"Amazon", search_string,\
+                             theTime['navigationStart'], theTime['fetchStart'],\
+                            theTime['domainLookupStart'], theTime['domainLookupEnd'], \
+                            theTime['connectStart'], theTime['secureConnectionStart'], \
+                            theTime['connectEnd'], theTime['requestStart'], \
+                            theTime['responseStart'], theTime['responseEnd'] , theTime['domLoading'] ])
 
             url_X = "https://www.youtube.com/results?search_query=" + search_string
             driver.get(url_X)
             timer = PageLoadTimer(driver)
             theTime = timer.get_event_times()
             if theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']) > 0:
-                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),theTime['connectStart'], theTime['secureConnectionStart'],\
-                            theTime['requestStart'], theTime['responseStart'], \
-                        theTime['secureConnectionStart'] - theTime['connectStart'], \
-                        theTime['responseStart'] - theTime['requestStart'] - (theTime['secureConnectionStart'] - theTime['connectStart']),"Youtube", search_string])
+                rows.append([datetime.now().strftime('%Y-%m-%d %H:%M:%S'),"Youtube", search_string,\
+                             theTime['navigationStart'], theTime['fetchStart'],\
+                            theTime['domainLookupStart'], theTime['domainLookupEnd'], \
+                            theTime['connectStart'], theTime['secureConnectionStart'], \
+                            theTime['connectEnd'], theTime['requestStart'], \
+                            theTime['responseStart'], theTime['responseEnd'] , theTime['domLoading'] ])
             driver.quit()
         time2 = time.time()
 
         counter += 1
         print(f"Round {counter} finished with {time2 - time1} seconds")
-        time.sleep(10)
 
     # name of csv file  
     filename = FNAME
@@ -137,10 +143,6 @@ def main():
             
         # writing the data rows  
         csvwriter.writerows(rows) 
-
-def traceroute(url):
-    result, unans = traceroute(url,maxttl=32)
-    print(result)
 
 if __name__ == '__main__':
     main()
